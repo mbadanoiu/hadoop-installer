@@ -134,21 +134,21 @@ sed -i '/<configuration>/,/<\/configuration>/c\
 sudo -u hduser /usr/local/hadoop/bin/hdfs namenode -format
 /bin/echo -e "\n\e[32mStarting up hadoop server...\e[0m\n"
 sudo -u hduser /usr/local/hadoop/sbin/start-dfs.sh
-services=$(jps)
+services=$(sudo -u hduser jps)
 if [[ $services == *'NameNode'* ]] && [[ $services == *'DataNode'* ]] && [[ $services == *'SecondaryNameNode'* ]]; then
 	/bin/echo -e "\n\e[32mAll seems to be running well\e[0m\n"
 else
 	/bin/echo -e "\n\e[31mWell something went wrong with the startup\e[0m\n"
-	echo $(jps)
+	echo $(sudo -u hduser jps)
 	exit
 fi
 
 /bin/echo -e "\n\e[32mStopping hadoop server...\e[0m\n"
 sudo -u hduser /usr/local/hadoop/sbin/stop-dfs.sh
-services=$(jps)
+services=$(sudo -u hduser jps)
 if [[ $services == *'NameNode'* ]] || [[ $services == *'DataNode'* ]] || [[ $services == *'SecondaryNameNode'* ]]; then
 	/bin/echo -e "\n\e[31mThings seem to be running still\e[0m\n"
-	echo $(jps)
+	echo $(sudo -u hduser jps)
 else
 	/bin/echo -e "\n\e[32mHadoop stopped gracefully\e[0m\n"
 fi
