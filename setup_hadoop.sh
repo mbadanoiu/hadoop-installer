@@ -23,12 +23,15 @@ if ! type jps > /dev/null 2>&1; then
 fi
 ##########################################################################
 
-sudo addgroup hadoop
+if [[ ! $(getent group hadoop) ]]; then
+	sudo addgroup hadoop
+fi
+
 sudo adduser --ingroup hadoop hduser
-sudo -u hduser mkdir /home/hduser/.ssh
+sudo -u hduser mkdir -p /home/hduser/.ssh
 sudo -u hduser ssh-keygen -f /home/hduser/.ssh/hduser_rsa -t rsa -P ""
-cat /home/hduser/.ssh/hduser_rsa.pub >> /home/hduser/.ssh/authorized_keys
-chown -R hduser:hadoop /home/hduser/.ssh
+sudo -u hduser cat /home/hduser/.ssh/hduser_rsa.pub >> /home/hduser/.ssh/authorized_keys
+#chown -R hduser:hadoop /home/hduser/.ssh
 
 if ! sudo service ssh restart 2> /dev/null; then
 	sudo systemctl restart ssh 2> /dev/null
